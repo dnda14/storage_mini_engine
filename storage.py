@@ -27,14 +27,28 @@ class Storage():
         
         with open(self.path, 'rb') as f:
             f.seek(offset) # random access to disk
-            key_sz = struct.unpack(">I",f.read(4))[0]
-            value_sz = struct.unpack(">I",f.read(4))[0]
+            first_read = f.read(4)
+            if len(first_read) < 4:
+                raise IOError("truncated record")
+            key_sz = struct.unpack(">I",first_read)[0]
+            sec_read  = f.read(4)
+            if len(first_read) < 4:
+                raise IOError("truncated record")
+            value_sz = struct.unpack(">I",sec_read)[0]
             
-            key_val = f.read(key_sz).decode('utf-8')
-            value_val = f.read(value_sz).decode('utf-8')
+            third_Read = f.read(key_sz)
+            if len(third_Read) < key_sz:
+                raise IOError("truncated record")
+            key_val = third_Read.decode('utf-8')
+            
+            four_read = f.read(value_sz)
+            if len(four_read) < value_sz:
+                raise IOError("truncated record")
+            value_val = four_read.decode('utf-8')
             
         
             print(key_val + value_val)
+            return key_val, value_val
         
 
 

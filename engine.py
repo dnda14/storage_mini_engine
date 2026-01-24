@@ -27,13 +27,15 @@ class Engine:
         self.storage.read_at(offset)
     
     def read_from_index(self,key):
+        
+        if not Path(self.storage.path).exists():
+            return None
         if key not in self.index:
             return None
         self.read_by_offset(self.index[key])
         
         
-        
-    
+
 if __name__ == "__main__":
     engine = Engine()
     engine.store_pair("usuario", "contraseña")
