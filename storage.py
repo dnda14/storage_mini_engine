@@ -5,7 +5,7 @@ class Storage():
     def __init__(self, path: str):
         self.path = Path(path)
         self.path.parent.mkdir(parents=True, exist_ok=True)
-        
+            
     def add(self,key,value):
         key_bytes = key.encode('utf-8')
         value_bytes = value.encode('utf-8') # necesary for serialization, transmission net , bbdd
@@ -31,8 +31,9 @@ class Storage():
             if len(first_read) < 4:
                 raise IOError("truncated record")
             key_sz = struct.unpack(">I",first_read)[0]
+            
             sec_read  = f.read(4)
-            if len(first_read) < 4:
+            if len(sec_read) < 4:
                 raise IOError("truncated record")
             value_sz = struct.unpack(">I",sec_read)[0]
             
